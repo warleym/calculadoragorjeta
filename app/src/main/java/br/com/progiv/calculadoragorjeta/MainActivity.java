@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 
@@ -14,10 +17,10 @@ public class MainActivity extends AppCompatActivity {
     //objetos formatadores de moeda:
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
 
-
     private double vrConta = 0.0; // valor da conta inserido pelo usuario
     private double percent = 0.015; // porcentagem inicial da gorjeta
     private TextView valorContaTextView; // mostra o valor da conta
+    private TextView valorGorjetaTextView; // mostra o valor da gorjeta
     private TextView valorTotalTextView; // mostra o valor da conta calculada
 
     @Override
@@ -28,13 +31,54 @@ public class MainActivity extends AppCompatActivity {
         //obter referencias para o TextView manipulados via programação
         valorContaTextView = (TextView)findViewById(R.id.valorConta);
         valorTotalTextView = (TextView)findViewById(R.id.valorTotal);
-        valorTotalTextView.setText(currencyFormat.format(0));
+        valorGorjetaTextView = (TextView)findViewById(R.id.valorGorjeta);
 
+        //zerando exibição na tela
+        valorTotalTextView.setText(currencyFormat.format(0));
+        valorGorjetaTextView.setText(currencyFormat.format(0));
 
         //configura o receptor TextWatcher de valorContaEditText
-        EditText valorContaEditText = (EditText)findViewById(R.id.valorConta):
+        EditText valorContaEditText = (EditText)findViewById(R.id.valorConta);
         valorContaEditText.addTextChangedListener(valorContaEditWatcher);
+
+        //configurar o reeptor OnSeekBarChangeListener de porcentagemBar
+        SeekBar percentSeekBar = (SeekBar)findViewById(R.id.porcentagemBar);
+        percentSeekBar.setOnSeekBarChangeListener(seekBarListener);
+
     }
+
+    private void calcular(){
+        try{
+            double gorjeta = vrConta * percent;
+            double total = vrConta + gorjeta;
+            valorTotalTextView.setText(currencyFormat.format(total));
+            valorGorjetaTextView.setText(currencyFormat.format(gorjeta));
+
+        }catch (Exception ex){
+            String y = ex.getMessage();
+        }
+    }
+
+    private final SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            percent = progress / 100;
+            calcular();
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+
+
+
     private final TextWatcher valorContaEditWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
