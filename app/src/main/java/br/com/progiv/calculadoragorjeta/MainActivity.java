@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
 
     private double vrConta = 0.0; // valor da conta inserido pelo usuario
-    private double percent = 0.015; // porcentagem inicial da gorjeta
+    private double percent = 0.15; // porcentagem inicial da gorjeta
     private TextView valorContaTextView; // mostra o valor da conta
     private TextView valorGorjetaTextView; // mostra o valor da gorjeta
     private TextView valorTotalTextView; // mostra o valor da conta calculada
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             double total = vrConta + gorjeta;
             valorTotalTextView.setText(currencyFormat.format(total));
             valorGorjetaTextView.setText(currencyFormat.format(gorjeta));
-
+            //%
         }catch (Exception ex){
             String y = ex.getMessage();
         }
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private final SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            percent = progress / 100;
+            percent = progress / 100.0;
             calcular();
         }
 
